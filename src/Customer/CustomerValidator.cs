@@ -27,9 +27,20 @@ namespace Customer
             {
                 errors.Add("Invalid customer property: Addresses");
             }
-            if (customer.PhoneNumber != null && customer.PhoneNumber.Length > _phoneNumberMaxLength)
+            if (customer.PhoneNumber != null)
             {
-                errors.Add("Invalid customer property: PhoneNumber");
+                bool isValid = !(customer.PhoneNumber.Length > _phoneNumberMaxLength);
+
+                foreach (var ch in customer.PhoneNumber)
+                {
+                    if (ch < '0' || ch > '9')
+                    {
+                        isValid = false;
+                    }
+                }
+                
+                if (!isValid)
+                    errors.Add("Invalid customer property: PhoneNumber");
             }
             if (customer.Email != null && !_emailRegex.IsMatch(customer.Email))
             {
