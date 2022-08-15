@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Customer
+﻿namespace Customer
 {
-    internal class Address
+    public class Address
     {
+
+        public string AddressLine { get; set; }
+
+        public string? AddressLine2 { get; set; }
+
+        public AddressType AddressType { get; set; } = AddressType.Unknown;
+
+        public string City { get; set; }
+
+        public string PostalCode { get; set; }
+
+        public string State { get; set; }
+
+        public string Country { get; set; }
     }
 }
