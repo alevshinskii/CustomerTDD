@@ -207,7 +207,7 @@ namespace Customer.Test
         }
 
         [Fact]
-        public void ShouldValidatorHaveNoErrors()
+        public void ShouldValidatorHaveNoErrorsIfValid()
         {
             Customer customer = new Customer();
 
