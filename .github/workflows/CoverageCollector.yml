@@ -20,13 +20,13 @@ jobs:
         dotnet-version: 6.0.x
 
     - name: Restore Dependencies
-      run: dotnet restore CalculatorApp.sln
+      run: dotnet restore CustomerTDD.sln
 
     - name: Build
-      run: dotnet build CalculatorApp.sln --configuration Release --no-restore
+      run: dotnet build CustomerTDD.sln --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test CalculatorApp.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+      run: dotnet test CustomerTDD.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
