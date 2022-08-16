@@ -1,35 +1,36 @@
 ﻿using System.Text.RegularExpressions;
+using StringExtension;
 
 namespace Customer
 {
     public class CustomerValidator
     {
-        private const int _firstNameMaxLength = 50;
-        private const int _lastNameMaxLength = 50;
-        private const int _addressesMinCount = 1;
-        private const int _notesMinCount = 1;
-        private const int _phoneNumberMaxLength = 15;
-        private static Regex _emailRegex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+        private const int FirstNameMaxLength = 50;
+        private const int LastNameMaxLength = 50;
+        private const int AddressesMinCount = 1;
+        private const int NotesMinCount = 1;
+        private const int PhoneNumberMaxLength = 15;
+        private static readonly Regex EmailRegex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
 
         public static List<string> Validate(Customer customer)
         {
             var errors = new List<string>();
 
-            if (customer.FirstName != null && customer.FirstName.Length > _firstNameMaxLength)
+            if (customer.FirstName?.Length > FirstNameMaxLength)
             {
                 errors.Add("Invalid customer property: FirstName");
             }
-            if (string.IsNullOrEmpty(customer.LastName) || customer.LastName.Length > _lastNameMaxLength)
+            if (customer.LastName.ValidateNullAndMaxLength(LastNameMaxLength))
             {
                 errors.Add("Invalid customer property: LastName");
             }
-            if (customer.Addresses.Count < _addressesMinCount)
+            if (customer.Addresses.Count < AddressesMinCount)
             {
                 errors.Add("Invalid customer property: Addresses");
             }
             if (customer.PhoneNumber != null)
             {
-                bool isValid = !(customer.PhoneNumber.Length > _phoneNumberMaxLength);
+                bool isValid = !(customer.PhoneNumber.Length > PhoneNumberMaxLength);
 
                 foreach (var ch in customer.PhoneNumber)
                 {
@@ -42,11 +43,11 @@ namespace Customer
                 if (!isValid)
                     errors.Add("Invalid customer property: PhoneNumber");
             }
-            if (customer.Email != null && !_emailRegex.IsMatch(customer.Email))
+            if (customer.Email != null && !EmailRegex.IsMatch(customer.Email))
             {
                 errors.Add("Invalid customer property: Email");
             }
-            if (customer.Notes.Count < _notesMinCount)
+            if (customer.Notes.Count < NotesMinCount)
             {
                 errors.Add("Invalid customer property: Notes");
             }

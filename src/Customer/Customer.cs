@@ -2,8 +2,9 @@
 {
     public class Customer : Person
     {
-        public override string? FirstName { get; set; }
-        public override string LastName { get; set; }
+
+        public override string? FirstName { get; set; } = String.Empty;
+        public override string LastName { get; set; } = String.Empty;
 
         public List<Address> Addresses { get; set; } = new List<Address>();
 

@@ -1,22 +1,24 @@
-﻿namespace Customer
+﻿using StringExtension;
+
+namespace Customer
 {
     public class AddressValidator
     {
-        private const int _addressLineMaxLength = 100;
-        private const int _cityMaxLength = 50;
-        private static List<string> _allowedCountries = new List<string>() { "United States", "Canada" };
-        private const int _postalCodeMaxLength = 6;
-        private const int _stateMaxLength = 20;
+        private const int AddressLineMaxLength = 100;
+        private const int CityMaxLength = 50;
+        private static readonly List<string> AllowedCountries = new() { "United States", "Canada" };
+        private const int PostalCodeMaxLength = 6;
+        private const int StateMaxLength = 20;
 
         public static List<string> Validate(Address address)
         {
             var errors = new List<string>();
 
-            if (string.IsNullOrEmpty(address.AddressLine) || address.AddressLine.Length > _addressLineMaxLength)
+            if (address.AddressLine.ValidateNullAndMaxLength(AddressLineMaxLength))
             {
                 errors.Add("Invalid address property: AddressLine");
             }
-            if (address.AddressLine2!=null && address.AddressLine2.Length > _addressLineMaxLength)
+            if (address.AddressLine2?.Length > AddressLineMaxLength)
             {
                 errors.Add("Invalid address property: AddressLine2");
             }
@@ -24,24 +26,26 @@
             {
                 errors.Add("Invalid address property: AddressType");
             }
-            if (string.IsNullOrEmpty(address.City) || address.City.Length > _cityMaxLength)
+            if (address.City.ValidateNullAndMaxLength(CityMaxLength))
             {
                 errors.Add("Invalid address property: City");
             }
-            if (!_allowedCountries.Contains(address.Country))
+            if (!AllowedCountries.Contains(address.Country, StringComparer.OrdinalIgnoreCase))
             {
                 errors.Add("Invalid address property: Country");
             }
-            if (string.IsNullOrEmpty(address.PostalCode) || address.PostalCode.Length > _postalCodeMaxLength)
+            if (address.PostalCode.ValidateNullAndMaxLength(PostalCodeMaxLength))
             {
                 errors.Add("Invalid address property: PostalCode");
             }
-            if (string.IsNullOrEmpty(address.State) || address.State.Length > _stateMaxLength)
+            if (address.State.ValidateNullAndMaxLength(StateMaxLength))
             {
                 errors.Add("Invalid address property: State");
             }
-            
+
             return errors;
         }
     }
+
 }
+

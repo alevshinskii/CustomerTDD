@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Customer
+﻿namespace Customer
 {
     public enum AddressType
     {
+        Unknown,
         Shipping,
         Billing,
-        Unknown
+
     }
 }
