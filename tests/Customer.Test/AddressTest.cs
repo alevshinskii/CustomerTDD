@@ -9,6 +9,9 @@ namespace Customer.Test
 {
     public class AddressTest
     {
+        private AddressValidator Validator = new();
+        private Faker Faker = new("en");
+
         [Fact]
         public void ShouldBeAbleToCreate()
         {
@@ -19,7 +22,7 @@ namespace Customer.Test
         public void ShouldBeAbleToValidate()
         {
             Address address = new Address();
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
         }
 
         [Fact]
@@ -28,23 +31,22 @@ namespace Customer.Test
             Address address = new Address();
             address.AddressLine = "Address";
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForAddressLine = "Invalid address property: AddressLine";
-
-            Assert.NotEmpty(validationResult);
-            Assert.DoesNotContain<string>(errorMessageForAddressLine,validationResult);
+            
+            Assert.DoesNotContain(errorMessageForAddressLine,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Fact]
         public void ShouldValidateWrongAddressLine()
         {
             Address address = new Address();
-            address.AddressLine = (new Faker()).Random.String(102);
+            address.AddressLine = Faker.Random.String(102);
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForAddressLine = "Invalid address property: AddressLine";
             
-            Assert.Contains(errorMessageForAddressLine, validationResult);
+            Assert.Contains(errorMessageForAddressLine,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Fact]
@@ -53,15 +55,10 @@ namespace Customer.Test
             Address address = new Address();
             address.AddressLine2 = "Address";
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForAddressLine = "Invalid address property: AddressLine2";
-
-            Assert.NotEmpty(validationResult);
-            Assert.DoesNotContain<string>(errorMessageForAddressLine,validationResult);
-
-            address.AddressLine2 = null;
-            validationResult = AddressValidator.Validate(address);
-            Assert.DoesNotContain<string>(errorMessageForAddressLine,validationResult);
+            
+            Assert.DoesNotContain(errorMessageForAddressLine,validationResult.Errors.Select(error=>error.ErrorMessage));
 
         }
 
@@ -72,9 +69,9 @@ namespace Customer.Test
             address.AddressLine2 = null;
 
             string errorMessageForAddressLine = "Invalid address property: AddressLine2";
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
 
-            Assert.DoesNotContain<string>(errorMessageForAddressLine,validationResult);
+            Assert.DoesNotContain(errorMessageForAddressLine,validationResult.Errors.Select(error=>error.ErrorMessage));
 
         }
 
@@ -82,12 +79,12 @@ namespace Customer.Test
         public void ShouldValidateWrongAddressLine2()
         {
             Address address = new Address();
-            address.AddressLine2 = (new Faker()).Random.String(101);
+            address.AddressLine2 = Faker.Random.String(101);
 
             string errorMessageForAddressLine = "Invalid address property: AddressLine2";
-            var  validationResult = AddressValidator.Validate(address);
+            var  validationResult = Validator.Validate(address);
 
-            Assert.Contains(errorMessageForAddressLine, validationResult);
+            Assert.Contains(errorMessageForAddressLine,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Fact]
@@ -96,11 +93,10 @@ namespace Customer.Test
             Address address = new Address();
             address.AddressType = AddressType.Billing;
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForAddressType = "Invalid address property: AddressType";
-
-            Assert.NotEmpty(validationResult);
-            Assert.DoesNotContain<string>(errorMessageForAddressType,validationResult);
+            
+            Assert.DoesNotContain(errorMessageForAddressType,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Fact]
@@ -109,10 +105,10 @@ namespace Customer.Test
             Address address = new Address();
             address.AddressType = AddressType.Unknown;
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForAddressType = "Invalid address property: AddressType";
 
-            Assert.Contains(errorMessageForAddressType, validationResult);
+            Assert.Contains(errorMessageForAddressType,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Fact]
@@ -121,24 +117,23 @@ namespace Customer.Test
             Address address = new Address();
             address.City = "New York";
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForCity = "Invalid address property: City";
-
-            Assert.NotEmpty(validationResult);
-            Assert.DoesNotContain<string>(errorMessageForCity,validationResult);
+            
+            Assert.DoesNotContain(errorMessageForCity,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Fact]
         public void ShouldValidateWrongCity()
         {
             Address address = new Address();
-            address.City = (new Faker()).Random.String(51);
+            address.City = Faker.Random.String(51);
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForCity = "Invalid address property: City";
             
-            validationResult = AddressValidator.Validate(address);
-            Assert.Contains(errorMessageForCity, validationResult);
+            validationResult = Validator.Validate(address);
+            Assert.Contains(errorMessageForCity,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Theory]
@@ -151,23 +146,22 @@ namespace Customer.Test
             Address address = new Address();
             address.Country = countryName;
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForCountry = "Invalid address property: Country";
-
-            Assert.NotEmpty(validationResult);
-            Assert.DoesNotContain<string>(errorMessageForCountry,validationResult);
+            
+            Assert.DoesNotContain(errorMessageForCountry,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Fact]
         public void ShouldValidateWrongCountry()
         {
             Address address = new Address();
-            address.Country = (new Faker()).Random.String(20);
+            address.Country = Faker.Random.String(20);
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForCountry = "Invalid address property: Country";
 
-            Assert.Contains(errorMessageForCountry, validationResult);
+            Assert.Contains(errorMessageForCountry,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Fact]
@@ -176,11 +170,10 @@ namespace Customer.Test
             Address address = new Address();
             address.PostalCode = "123456";
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForPostalCode = "Invalid address property: PostalCode";
-
-            Assert.NotEmpty(validationResult);
-            Assert.DoesNotContain<string>(errorMessageForPostalCode,validationResult);
+            
+            Assert.DoesNotContain(errorMessageForPostalCode,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Fact]
@@ -188,12 +181,12 @@ namespace Customer.Test
         {
             Address address = new Address();
             
-            address.PostalCode = (new Faker()).Random.String(7);
+            address.PostalCode = Faker.Random.String(7);
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForPostalCode = "Invalid address property: PostalCode";
 
-            Assert.Contains(errorMessageForPostalCode, validationResult);
+            Assert.Contains(errorMessageForPostalCode,validationResult.Errors.Select(error=>error.ErrorMessage));
 
         }
 
@@ -203,23 +196,22 @@ namespace Customer.Test
             Address address = new Address();
             address.State = "State";
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForState = "Invalid address property: State";
-
-            Assert.NotEmpty(validationResult);
-            Assert.DoesNotContain<string>(errorMessageForState,validationResult);
+            
+            Assert.DoesNotContain(errorMessageForState,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Fact]
         public void ShouldValidateWrongState()
         {
             Address address = new Address();
-            address.State = (new Faker()).Random.String(21);
+            address.State = Faker.Random.String(21);
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
             string errorMessageForState = "Invalid address property: State";
             
-            Assert.Contains(errorMessageForState, validationResult);
+            Assert.Contains(errorMessageForState,validationResult.Errors.Select(error=>error.ErrorMessage));
         }
 
         [Fact]
@@ -235,9 +227,10 @@ namespace Customer.Test
             address.PostalCode = "123456";
             address.AddressType = AddressType.Shipping;
 
-            var validationResult = AddressValidator.Validate(address);
+            var validationResult = Validator.Validate(address);
 
-            Assert.Empty(validationResult);
+            Assert.True(validationResult.IsValid);
+            Assert.Empty(validationResult.Errors);
         }
     }
 }

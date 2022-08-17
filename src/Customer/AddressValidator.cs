@@ -1,8 +1,8 @@
-﻿using StringExtension;
+﻿using FluentValidation;
 
 namespace Customer
 {
-    public class AddressValidator
+    public class AddressValidator : AbstractValidator<Address>
     {
         private const int AddressLineMaxLength = 100;
         private const int CityMaxLength = 50;
@@ -10,40 +10,24 @@ namespace Customer
         private const int PostalCodeMaxLength = 6;
         private const int StateMaxLength = 20;
 
-        public static List<string> Validate(Address address)
+
+        public AddressValidator()
         {
-            var errors = new List<string>();
 
-            if (address.AddressLine.ValidateNullAndMaxLength(AddressLineMaxLength))
-            {
-                errors.Add("Invalid address property: AddressLine");
-            }
-            if (address.AddressLine2?.Length > AddressLineMaxLength)
-            {
-                errors.Add("Invalid address property: AddressLine2");
-            }
-            if (address.AddressType == AddressType.Unknown)
-            {
-                errors.Add("Invalid address property: AddressType");
-            }
-            if (address.City.ValidateNullAndMaxLength(CityMaxLength))
-            {
-                errors.Add("Invalid address property: City");
-            }
-            if (!AllowedCountries.Contains(address.Country, StringComparer.OrdinalIgnoreCase))
-            {
-                errors.Add("Invalid address property: Country");
-            }
-            if (address.PostalCode.ValidateNullAndMaxLength(PostalCodeMaxLength))
-            {
-                errors.Add("Invalid address property: PostalCode");
-            }
-            if (address.State.ValidateNullAndMaxLength(StateMaxLength))
-            {
-                errors.Add("Invalid address property: State");
-            }
+            RuleFor(address => address.AddressLine).NotNull().MaximumLength(AddressLineMaxLength).WithMessage("Invalid address property: AddressLine");
 
-            return errors;
+            RuleFor(address => address.AddressLine2).MaximumLength(AddressLineMaxLength).WithMessage("Invalid address property: AddressLine2");
+
+            RuleFor(address => address.AddressType).NotEqual(AddressType.Unknown).WithMessage("Invalid address property: AddressType");
+
+            RuleFor(address => address.City).MaximumLength(CityMaxLength).WithMessage("Invalid address property: City");
+
+            RuleFor(address => address.Country).Must(country => AllowedCountries.Contains(country,StringComparer.OrdinalIgnoreCase)).WithMessage("Invalid address property: Country");
+
+            RuleFor(address => address.PostalCode).MaximumLength(PostalCodeMaxLength).WithMessage("Invalid address property: PostalCode");
+
+            RuleFor(address => address.State).MaximumLength(StateMaxLength).WithMessage("Invalid address property: State");
+
         }
     }
 
